@@ -30,7 +30,7 @@ RUN apt-get update \
     && apt-get -y --no-install-recommends install php7.0-mysql \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
-RUN tar -zxcf /opt/wp-tests.tar.gz -C /opt
+RUN tar -zxvf /opt/wp-tests.tar.gz -C /opt
 
 ENV DEBIAN_FRONTEND=noninteractive
 
