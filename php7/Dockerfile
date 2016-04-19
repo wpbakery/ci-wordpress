@@ -25,6 +25,7 @@ RUN apt-get update \
 RUN sed -i "/upload_max_filesize = .*/c\upload_max_filesize = 200M" $PHP_INI_DIR/php.ini \
     && sed -i "/post_max_size = .*/c\post_max_size = 200M" $PHP_INI_DIR/php.ini \
     && sed -i "/memory_limit = .*/c\memory_limit = 256M" $PHP_INI_DIR/php.ini
+
 # Install selected extensions and other stuff
 RUN apt-get update \
     && apt-get -y --no-install-recommends install php7.0-mysql \
@@ -48,11 +49,6 @@ WORKDIR /var/www/html
 RUN curl -SL --insecure "https://phar.phpunit.de/phpunit.phar" -o phpunit.phar \
     && chmod +x phpunit.phar \
     && mv phpunit.phar /usr/bin/phpunit
-
-# Install git, ssh, wget, svn??
-#RUN apt-get update \
- #   && apt-get install -y subversion git ssh wget --no-install-recommends \
- #   && rm -rf /var/lib/apt/lists/*
 
 # Configure mysql sock
 RUN ln -s /var/run/mysqld/mysqld.sock /tmp/mysql.sock
