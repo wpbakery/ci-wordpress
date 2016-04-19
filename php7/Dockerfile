@@ -4,7 +4,7 @@ ENV WP_TESTS_DIR /opt/wp-tests
 ENV WP_TESTS_ABSPATH /var/www/html/
 ENV WP_TESTS_DOMAIN localhost
 
-COPY wp-tests.tar.gz $WP_TESTS_DIR
+COPY wp-tests.tar.gz /opt
 
 # Install dotdeb repo, PHP, composer and selected extensions
 RUN apt-get update \
