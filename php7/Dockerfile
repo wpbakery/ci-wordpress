@@ -21,8 +21,6 @@ RUN apt-get update \
     && pecl install -o -f xdebug \
     && echo "zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20151012/xdebug.so" > /usr/local/etc/php/conf.d/xdebug.ini
 
-
-
 # POST and max upload sizes on php.ini
 RUN sed -i "/upload_max_filesize = .*/c\upload_max_filesize = 200M" $PHP_INI_DIR/php.ini \
     && sed -i "/post_max_size = .*/c\post_max_size = 200M" $PHP_INI_DIR/php.ini \
@@ -32,6 +30,7 @@ RUN apt-get update \
     && apt-get -y --no-install-recommends install php7.0-mysql \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
+RUN tar -zxcf /opt/wp-tests.tar.gz -C /opt
 
 ENV DEBIAN_FRONTEND=noninteractive
 

@@ -24,7 +24,7 @@ RUN sed -i "/upload_max_filesize = .*/c\upload_max_filesize = 200M" $PHP_INI_DIR
     && sed -i "/post_max_size = .*/c\post_max_size = 200M" $PHP_INI_DIR/php.ini \
     && sed -i "/memory_limit = .*/c\memory_limit = 256M" $PHP_INI_DIR/php.ini
 
-RUN tar -zxcf /opt/wp-tests.tar.gz
+RUN tar -zxcf /opt/wp-tests.tar.gz -C /opt
 
 ENV DEBIAN_FRONTEND=noninteractive
 
