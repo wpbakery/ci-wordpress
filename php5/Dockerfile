@@ -4,7 +4,7 @@ ENV WP_TESTS_DIR /opt/wp-tests
 ENV WP_TESTS_ABSPATH /var/www/html/
 ENV WP_TESTS_DOMAIN localhost
 
-COPY ../wp-tests-dev $WP_TESTS_DIR
+COPY wp-tests.tar.gz /opt
 
 # Install dotdeb repo, PHP, composer and selected extensions
 RUN apt-get update \
@@ -19,14 +19,13 @@ RUN apt-get update \
     && pecl install -o -f xdebug \
     && echo "zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20121212/xdebug.so" > $PHP_INI_DIR/conf.d/xdebug.ini
 
-
-
 # POST and max upload sizes on php.ini
 RUN sed -i "/upload_max_filesize = .*/c\upload_max_filesize = 200M" $PHP_INI_DIR/php.ini \
     && sed -i "/post_max_size = .*/c\post_max_size = 200M" $PHP_INI_DIR/php.ini \
     && sed -i "/memory_limit = .*/c\memory_limit = 256M" $PHP_INI_DIR/php.ini
 
-#
+RUN tar -zxcf /opt/wp-tests.tar.gz
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
