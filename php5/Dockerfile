@@ -39,7 +39,7 @@ RUN apt-get update \
 WORKDIR /var/www/html
 
 # Install PhpUnit
-RUN curl -SL --insecure "https://phar.phpunit.de/phpunit.phar" -o phpunit.phar \
+RUN curl -SL --insecure "https://phar.phpunit.de/phpunit-old.phar" -o phpunit.phar \
     && chmod +x phpunit.phar \
     && mv phpunit.phar /usr/bin/phpunit
 
