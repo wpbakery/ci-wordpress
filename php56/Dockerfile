@@ -3,7 +3,6 @@ FROM php:5.6-apache
 ENV WP_TESTS_DIR /opt/wp-tests
 ENV WP_TESTS_ABSPATH /var/www/html/
 ENV WP_TESTS_DOMAIN localhost
-ENV PATH $PATH:~/.composer/vendor/bin/
 
 COPY wp-tests.tar.gz /opt
 
@@ -54,6 +53,8 @@ RUN curl --insecure -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/
     && mv wp-cli.phar /usr/local/bin/wp
 
 RUN composer global require "squizlabs/php_codesniffer=*"
+
+RUN echo 'export PATH=$PATH:/root/.composer/vendor/bin' >> /root/.bashrc
 
 # Setup database `test`
 RUN service mysql start \
