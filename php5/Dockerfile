@@ -30,6 +30,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && apt-get install -y mysql-server libmysqlclient-dev --no-install-recommends \
+    && apt-get install -y git zip \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update \
@@ -50,6 +51,8 @@ RUN ln -s /var/run/mysqld/mysqld.sock /tmp/mysql.sock
 RUN curl --insecure -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp
+
+RUN pear install PHP_CodeSniffer
 
 # Setup database `test`
 RUN service mysql start \

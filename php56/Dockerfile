@@ -52,9 +52,7 @@ RUN curl --insecure -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp
 
-RUN composer global require "squizlabs/php_codesniffer=*"
-
-RUN echo 'export PATH=$PATH:/root/.composer/vendor/bin' >> /root/.bashrc
+RUN pear install PHP_CodeSniffer
 
 # Setup database `test`
 RUN service mysql start \
