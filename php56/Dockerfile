@@ -16,8 +16,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
     && cp /etc/php5/fpm/php.ini $PHP_INI_DIR \
     && docker-php-ext-install mysqli pdo pdo_mysql \
-    && pecl install -o -f xdebug \
-    && echo "zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20131226/xdebug.so" > $PHP_INI_DIR/conf.d/xdebug.ini
+    && pecl install -o -f xdebug
 
 # POST and max upload sizes on php.ini
 RUN sed -i "/upload_max_filesize = .*/c\upload_max_filesize = 200M" $PHP_INI_DIR/php.ini \
@@ -64,4 +63,4 @@ RUN service mysql start \
     && wp core install --url=http://localhost --title=Test --admin_user=admin --admin_password=12345 --admin_email=test@test.com --path=/var/www/html --allow-root
 
 # Start the mysql
-ENTRYPOINT service mysql start && bash
+ENTRYPOINT bash
