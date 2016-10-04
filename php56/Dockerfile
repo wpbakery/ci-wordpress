@@ -63,4 +63,4 @@ RUN service mysql start \
     && wp core install --url=http://localhost --title=Test --admin_user=admin --admin_password=12345 --admin_email=test@test.com --path=/var/www/html --allow-root
 
 # Start the mysql
-ENTRYPOINT bash
+ENTRYPOINT service mysql start && bash
