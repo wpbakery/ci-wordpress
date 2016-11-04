@@ -10,7 +10,7 @@ COPY wp-tests.tar.gz /opt
 RUN apt-get update \
     && apt-get install -y curl \
     && apt-get update \
-    && apt-get -y --no-install-recommends install php5-cli php5-fpm php5-apcu php5-curl php5-mcrypt php5-mysql php5-readline \
+    && apt-get -y --no-install-recommends install php5-cli php5-fpm php5-apcu php5-curl php5-mcrypt php5-mysql php5-gd php5-readline \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
