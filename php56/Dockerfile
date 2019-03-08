@@ -44,7 +44,7 @@ RUN usermod -d /var/lib/mysql mysql && find /var/lib/mysql -exec touch {} \; && 
 
 RUN find /var/lib/mysql -exec touch {} \; && /etc/init.d/mysql start \
     && wp core download --path=/var/www/html --allow-root \
-    && wp core config --path=/var/www/html --dbname=test --dbuser=root --allow-root \
+    && wp core config --path=/var/www/html --dbhost=127.0.0.1 --dbname=test --dbuser=root --allow-root \
     && wp core install --url=http://localhost --title=Test --admin_user=admin --admin_password=12345 --admin_email=test@test.com --path=/var/www/html --allow-root
 
 # Start the mysql
