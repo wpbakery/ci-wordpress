@@ -26,7 +26,7 @@ RUN sed -i "/upload_max_filesize = .*/c\upload_max_filesize = 200M" /etc/php/7.1
     && sed -i "/memory_limit = .*/c\memory_limit = 256M" /etc/php/7.1/cli/php.ini \
     && sed -i "s/zend_extension/;zend_extension/g" /etc/php/7.1/mods-available/xdebug.ini
 
-RUN tar -zxvf /opt/wp-tests.tar.gz -C /opt
+RUN tar -zxvf /opt/wp-tests.tar.gz -C /opt && chown root:root /opt/wp-tests -R
 
 WORKDIR /var/www/html
 
