@@ -41,7 +41,7 @@ RUN curl --insecure -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/
 # Setup database `test`
 RUN usermod -d /var/lib/mysql mysql && find /var/lib/mysql -exec touch {} \; && /etc/init.d/mysql start \
     && mysql --user="root" --execute="CREATE DATABASE test;" \
-    && mysql --user="root" --execute="GRANT SELECT ON *.* TO 'wpuser'@'127.0.0.1';"
+    && mysql --user="root" --execute="CREATE USER 'wpuser'@'127.0.0.1'; GRANT SELECT ON *.* TO 'wpuser'@'127.0.0.1';"
 
 RUN find /var/lib/mysql -exec touch {} \; && /etc/init.d/mysql start \
     && wp core download --path=/var/www/html --allow-root \
