@@ -74,4 +74,4 @@ RUN \
   export npm_config_unsafe_perm=true
 
 # Start the mysql
-ENTRYPOINT /etc/init.d/mysql start && bash
+ENTRYPOINT find /var/lib/mysql -type f -exec touch {} \; && service mysql start && bash
