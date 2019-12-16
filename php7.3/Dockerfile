@@ -19,7 +19,7 @@ RUN apt-get update \
     && add-apt-repository ppa:ondrej/php \
     && apt-get update
 
-RUN apt-get install -y mysql-server libmysqlclient-dev --no-install-recommends
+RUN  apt-get update && apt-get install -y mysql-server libmysqlclient-dev --no-install-recommends
 
 RUN apt-get install -y php7.3 php7.3-common php7.3-dev php7.3-dom php7.3-xdebug php7.3-zip php7.3-cli php7.3-mbstring php7.3-pdo php7.3-fpm php7.3-curl php7.3-mysql php7.3-gd php7.3-readline
 
@@ -29,8 +29,14 @@ RUN sed -i "/upload_max_filesize = .*/c\upload_max_filesize = 200M" /etc/php/7.3
     && sed -i "/memory_limit = .*/c\memory_limit = 256M" /etc/php/7.3/cli/php.ini \
     && sed -i "s/zend_extension/;zend_extension/g" /etc/php/7.3/mods-available/xdebug.ini
 
-
 RUN tar -zxvf /opt/wp-tests-8.0.1.tar.gz -C /opt
+
+# Install GO (required for phpgrep)
+RUN curl -O https://dl.google.com/go/go1.13.linux-amd64.tar.gz \
+    && tar -C /usr/local -xzf go1.13.linux-amd64.tar.gz
+RUN export PATH=$PATH:/usr/local/go/bin
+RUN /usr/local/go/bin/go get -v github.com/quasilyte/phpgrep/cmd/phpgrep
+
 RUN chown root:root /opt/wp-tests -R
 
 WORKDIR /var/www/html
@@ -52,7 +58,7 @@ RUN usermod -d /var/lib/mysql mysql && find /var/lib/mysql -exec touch {} \; && 
 RUN find /var/lib/mysql -exec touch {} \; && /etc/init.d/mysql start \
     && wp core download --path=/var/www/html --allow-root \
     && wp core config --path=/var/www/html --dbhost=127.0.0.1 --dbname=test --dbuser=wpuser --dbpass=wpuser --allow-root \
-    && wp core install --url=http://localhost --title=Test --admin_user=admin --admin_password=12345 --admin_email=test@test.com --path=/var/www/html --allow-root
+    && wp core install --url=http://localhost --title=Test --admin_user=admin --admin_password=12345 --admin_email=test@test.com --path=/var/www/html --allow-root --skip-email
 
 # Install node and chrome
 RUN \
