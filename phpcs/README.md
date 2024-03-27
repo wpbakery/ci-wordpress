@@ -1,3 +1,1 @@
-# Docker WordPress image
-
-# Foo
+https://hub.docker.com/r/wpbakery/phpcs
