@@ -1,0 +1,3 @@
+# Docker WordPress image
+
+# Foo
