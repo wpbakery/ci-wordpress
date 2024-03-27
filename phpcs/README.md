@@ -1,1 +1,1 @@
-https://hub.docker.com/r/wpbakery/phpcs
+# https://hub.docker.com/r/wpbakery/phpcs
