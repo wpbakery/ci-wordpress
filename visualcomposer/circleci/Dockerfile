@@ -1,4 +1,6 @@
-FROM circleci/php:7.3.2-apache
+FROM circleci/php:7.4.2-apache
+
+COPY wp-tests-9.0.0.tar.gz /opt
 
 # Install packages
 RUN \
@@ -15,11 +17,11 @@ RUN \
   sudo docker-php-ext-install intl && \
   sudo docker-php-ext-install pdo pdo_mysql mysqli && \
   sudo docker-php-ext-install gd && \
-  sudo apt-get -y install mysql-client
+  sudo apt-get -y install default-mysql-client
 # Install tools for Wordpress
+
 RUN \
-  sudo mv ci/wp-tests-8.0.0.tar.gz /opt && \
-  sudo tar -zxvf /opt/wp-tests-8.0.0.tar.gz -C /opt && sudo chown root:root /opt/wp-tests -R && \
+  sudo tar -zxvf /opt/wp-tests-9.0.0.tar.gz -C /opt && sudo chown root:root /opt/wp-tests -R && \
   curl --insecure -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
   chmod +x wp-cli.phar && \
   sudo mv wp-cli.phar /usr/local/bin/wp
