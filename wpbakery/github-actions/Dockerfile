@@ -23,7 +23,7 @@ RUN apt-get update \
     && apt-get update
 
 # Add Node.js repository and install specific version
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
 # Install npm with Node.js
