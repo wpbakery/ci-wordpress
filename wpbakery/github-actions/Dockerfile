@@ -31,8 +31,12 @@ RUN npm install -g npm@7
 
 RUN apt-get install -y mysql-server libmysqlclient-dev --no-install-recommends
 
-RUN apt-get install -y php7.4 php7.4-common php7.4-dev php7.4-dom php7.4-xdebug php7.4-zip php7.4-cli php7.4-mbstring php7.4-pdo php7.4-fpm php7.4-curl php7.4-mysql php7.4-gd php7.4-readline
+RUN apt-get install -y php7.4 php7.4-common php7.4-dev php7.4-dom php7.4-xdebug php7.4-zip php7.4-cli php7.4-mbstring php7.4-pdo php7.4-fpm php7.4-curl php7.4-mysql php7.4-gd php7.4-readline php7.4-xdebug
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Enable Xdebug for code coverage
+RUN echo "zend_extension=xdebug.so" >> /etc/php/7.4/cli/php.ini \
+    && echo "xdebug.mode=coverage" >> /etc/php/7.4/cli/php.ini
 
 # POST and max upload sizes on php.ini
 RUN sed -i "/upload_max_filesize = .*/c\upload_max_filesize = 200M" /etc/php/7.4/cli/php.ini \
