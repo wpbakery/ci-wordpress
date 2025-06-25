@@ -1,3 +1,4 @@
+
 FROM ubuntu:22.04
 
 ENV MYSQL_HOST 127.0.0.1
@@ -10,10 +11,11 @@ ENV WP_TESTS_ABSPATH /var/www/html/
 ENV WP_TESTS_DB_NAME test
 ENV WP_TESTS_DB_USER wpuser
 ENV WP_TESTS_DB_HOST 127.0.0.1
-
-COPY wp-tests-9.0.0.tar.gz /opt
-
 ENV DEBIAN_FRONTEND=noninteractive
+ENV PHP_VERSIONS="7.4 8.0 8.1 8.2 8.3 8.4"
+ENV PHP_MODULES="cli common dev dom xdebug zip mbstring pdo fpm curl mysql gd readline xml intl soap bcmath opcache"
+
+COPY wp-tests.tar.gz /opt
 
 RUN apt-get update \
     && apt-get install -y curl git zip \
@@ -31,20 +33,37 @@ RUN npm install -g npm@7
 
 RUN apt-get install -y mysql-server libmysqlclient-dev --no-install-recommends
 
-RUN apt-get install -y php7.4 php7.4-common php7.4-dev php7.4-dom php7.4-xdebug php7.4-zip php7.4-cli php7.4-mbstring php7.4-pdo php7.4-fpm php7.4-curl php7.4-mysql php7.4-gd php7.4-readline php7.4-xdebug
+RUN for v in $PHP_VERSIONS; do \
+    apt-get install -y $(echo $PHP_MODULES | sed "s/[^ ]*/php$v-&/g"); \
+done
+
+# Register all PHP versions with update-alternatives
+RUN for v in $PHP_VERSIONS; do \
+    shortv=$(echo $v | tr -d .); \
+    # Register alternatives
+    update-alternatives --install /usr/bin/php php /usr/bin/php$v $shortv || true; \
+    update-alternatives --install /usr/bin/php-config php-config /usr/bin/php-config$v $shortv || true; \
+    update-alternatives --install /usr/bin/phpize phpize /usr/bin/phpize$v $shortv || true; \
+done
+
+# Set default PHP version (can be overridden in workflow)
+RUN update-alternatives --set php /usr/bin/php7.4 && \
+    update-alternatives --set php-config /usr/bin/php-config7.4 && \
+    update-alternatives --set phpize /usr/bin/phpize7.4
+
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Enable Xdebug for code coverage
-RUN echo "zend_extension=xdebug.so" >> /etc/php/7.4/cli/php.ini \
-    && echo "xdebug.mode=coverage" >> /etc/php/7.4/cli/php.ini
+RUN for v in $PHP_VERSIONS; do \
+    echo "zend_extension=xdebug.so" >> /etc/php/$v/cli/php.ini && \
+    echo "xdebug.mode=coverage" >> /etc/php/$v/cli/php.ini && \
+    sed -i "s/zend_extension/;zend_extension/g" /etc/php/$v/mods-available/xdebug.ini && \
+    sed -i "s/upload_max_filesize = .*/upload_max_filesize = 200M/" /etc/php/$v/cli/php.ini && \
+    sed -i "s/post_max_size = .*/post_max_size = 200M/" /etc/php/$v/cli/php.ini && \
+    sed -i "s/memory_limit = .*/memory_limit = 256M/" /etc/php/$v/cli/php.ini; \
+done
 
-# POST and max upload sizes on php.ini
-RUN sed -i "/upload_max_filesize = .*/c\upload_max_filesize = 200M" /etc/php/7.4/cli/php.ini \
-    && sed -i "/post_max_size = .*/c\post_max_size = 200M" /etc/php/7.4/cli/php.ini \
-    && sed -i "/memory_limit = .*/c\memory_limit = 256M" /etc/php/7.4/cli/php.ini \
-    && sed -i "s/zend_extension/;zend_extension/g" /etc/php/7.4/mods-available/xdebug.ini
-
-RUN tar -zxvf /opt/wp-tests-9.0.0.tar.gz -C /opt && chown root:root /opt/wp-tests -R
+RUN tar -zxvf /opt/wp-tests.tar.gz -C /opt && chown root:root /opt/wp-tests -R
 
 WORKDIR /var/www/html
 
