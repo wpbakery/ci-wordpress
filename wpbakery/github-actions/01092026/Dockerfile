@@ -34,7 +34,10 @@ RUN npm install -g npm@7
 RUN apt-get install -y mysql-server libmysqlclient-dev --no-install-recommends
 
 RUN for v in $PHP_VERSIONS; do \
-    apt-get install -y $(echo $PHP_MODULES | sed "s/[^ ]*/php$v-&/g"); \
+    mods="$PHP_MODULES"; \
+    # PHP 8.5 bundles OPcache into core - there is no php8.5-opcache package
+    if [ "$v" = "8.5" ]; then mods=$(echo "$mods" | sed "s/opcache//"); fi; \
+    apt-get install -y $(echo $mods | sed "s/[^ ]*/php$v-&/g"); \
 done
 
 # Register all PHP versions with update-alternatives
@@ -80,10 +83,13 @@ RUN usermod -d /var/lib/mysql mysql && find /var/lib/mysql -exec touch {} \; && 
     && mysql --user="root" --execute="CREATE DATABASE test;" \
     && mysql --user="root" --execute="CREATE USER 'wpuser'@'127.0.0.1'; GRANT ALL PRIVILEGES ON test.* TO 'wpuser'@'127.0.0.1';"
 
+# Setup wp
 RUN find /var/lib/mysql -exec touch {} \; && /etc/init.d/mysql start \
     && wp core download --path=/var/www/html --allow-root \
     && wp core config --path=/var/www/html --dbhost=127.0.0.1 --dbname=test --dbuser=wpuser --allow-root \
-    && wp core install --url=http://localhost --title=Test --admin_user=admin --admin_password=12345 --admin_email=test@test.com --path=/var/www/html --allow-root
+    && wp core install --url=http://localhost --title=Test --admin_user=admin --admin_password=12345 --admin_email=test@test.com --path=/var/www/html --allow-root \
+    && wp db reset --yes --allow-root \
+    && wp --allow-root  core install --url='' --title='Example' --admin_user=admin --admin_password='admin' --admin_email=admin@gmail.com --allow-root
 
 # Start the mysql
 ENTRYPOINT /etc/init.d/mysql start && bash
