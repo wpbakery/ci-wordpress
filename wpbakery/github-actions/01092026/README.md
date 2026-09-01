@@ -1,1 +1,1 @@
-# [https://hub.docker.com/repository/docker/wpbakery/ci-github/tags/01092026/sha256:38ef1c9b6e167595f77be4c7467cf7734c368358fc097608041dfc722cfbb761](https://hub.docker.com/layers/wpbakery/ci-github/07102025/images/sha256-a7c6c463d3252bd6c121be381835d5296fc2c1f5353a4e8209765fda68f59b94)
+# [Link to image tag](https://hub.docker.com/repository/docker/wpbakery/ci-github/tags/01092026/sha256:38ef1c9b6e167595f77be4c7467cf7734c368358fc097608041dfc722cfbb761)
